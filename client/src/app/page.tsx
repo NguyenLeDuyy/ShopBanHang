@@ -1,3 +1,5 @@
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import Image from "next/image";
 
 export default function Home() {
@@ -26,6 +28,9 @@ export default function Home() {
           <li className="tracking-[-.01em]">
             Xin chào mọi người, mình đang học NextJS trên Youtube.
           </li>
+          <Button className="p-10" variant={'outline'}>Cái nút này để ấn</Button>
+          <Input></Input>
+
         </ol>
 
         <div className="flex gap-4 items-center flex-col sm:flex-row">
