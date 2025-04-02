@@ -1,5 +1,3 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import Image from "next/image";
 
 export default function Home() {
@@ -14,6 +12,9 @@ export default function Home() {
           height={38}
           priority
         />
+        <h1 className="text-3xl font-bold underline">
+          Hello world!
+        </h1>
         <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
           <li className="mb-2 tracking-[-.01em]">
             Get started by editing{" "}
@@ -25,12 +26,6 @@ export default function Home() {
           <li className="tracking-[-.01em]">
             Save and see your changes instantly.
           </li>
-          <li className="tracking-[-.01em]">
-            Xin chào mọi người, mình đang học NextJS trên Youtube.
-          </li>
-          <Button className="p-10" variant={'outline'}>Cái nút này để ấn</Button>
-          <Input></Input>
-
         </ol>
 
         <div className="flex gap-4 items-center flex-col sm:flex-row">
