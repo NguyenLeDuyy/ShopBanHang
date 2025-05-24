@@ -1,19 +1,30 @@
+
+import ButtonRedirect from "@/app/components/ButtonRedirect";
 // import { Button } from "@/components/ui/button";
 
-import Image from "next/image";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+
+const isAuth = false;
 
 export default function Home() {
+
+  if (!isAuth) {
+    redirect('/login')
+  }
+
   return (
     <main>
-      <div className="w-[700px] h-[700px] bg-red-300">
-        <Image
-          src='https://images.pexels.com/photos/16105790/pexels-photo-16105790/free-photo-of-toa-nha-d-ng-lau-dai-l-ch-s.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
-          alt="suffer"
-          width={500}
-          height={500}
-          quality={100}
-        />
-      </div>
+      <ul>
+        <li>
+          <Link href={"/login"}>Login</Link>
+        </li>
+        <li>
+          <Link href={"/register"}>Register</Link>
+        </li>
+      </ul>
+
+      <ButtonRedirect />
     </main>
   );
 }
