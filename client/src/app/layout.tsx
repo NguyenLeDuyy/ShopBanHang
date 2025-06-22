@@ -1,24 +1,10 @@
 import type { Metadata } from "next";
-// import { Roboto } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
-import localFont from 'next/font/local'
+import { ThemeProvider } from "@/components/theme-provider";
+import Header from "@/components/header";
 
-
-// const roboto = Roboto({ subsets: ['vietnamese'], weight: ['100', '300'] })
-
-const myFont = localFont({
-  src: [{
-    path: './Roboto-Thin.ttf',
-    weight: '100'
-  },
-  {
-    path: './Roboto-Regular.ttf',
-    weight: '400'
-  }
-  ],
-  display: "swap",
-  variable: '--font-roboto',
-})
+const inter = Inter({ subsets: ['vietnamese'] })
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -31,11 +17,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${myFont.variable}`}
+        className={`${inter.className}`}
       >
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Header />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

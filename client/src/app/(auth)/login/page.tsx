@@ -1,6 +1,11 @@
-export default function LoginPage() {
-    return (
-        <div>Login page</div>
+'use client'
 
+const LoginPage = () => {
+    return (
+        <div>Login page
+        </div>
     )
+
 }
+
+export default LoginPage;
