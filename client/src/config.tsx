@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-
 const configShema = z.object({
     NEXT_PUBLIC_API_ENDPOINT: z.string()
 })

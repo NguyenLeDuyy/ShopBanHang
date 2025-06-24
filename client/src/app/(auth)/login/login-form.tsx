@@ -15,8 +15,11 @@ import { Input } from "@/components/ui/input"
 import { LoginBody, LoginBodyType } from "@/schemaValidations/auth.schema"
 import envConfig from "@/config"
 import { toast } from "sonner"
+import { useAppContext } from "@/app/AppProvider"
 
 const LoginForm = () => {
+
+    const { setSessionToken } = useAppContext();
 
     // 1. Define your form.
     const form = useForm<LoginBodyType>({
@@ -50,8 +53,28 @@ const LoginForm = () => {
             })
 
             toast.success('Đăng nhập thành công', {
-                description: 'Monday, January 3rd at 6:00pm',
+                description: 'Vui lòng chờ trong giây lát',
             })
+
+            const resultFromNextServer = await fetch("/api/auth", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(result)
+            }).then(async (res) => {
+                const payload = await res.json()
+                const data = {
+                    status: res.status,
+                    payload
+                }
+                if (!res.ok) {
+                    throw data
+                }
+                return data
+            })
+            // console.log(resultFromNextServer)
+            setSessionToken(resultFromNextServer.payload.data.token)
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
