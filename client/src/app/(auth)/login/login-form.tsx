@@ -16,9 +16,12 @@ import { LoginBody, LoginBodyType } from "@/schemaValidations/auth.schema"
 import { toast } from "sonner"
 import authApiRequest from "@/apiRequests/authApiRequest"
 import { useRouter } from "next/navigation"
+import { handleErrorApi } from "@/lib/utils"
+import { useState } from "react"
 
 const LoginForm = () => {
 
+    const [isLoading, setIsLoading] = useState(false)
     const router = useRouter();
 
     // 1. Define your form.
@@ -32,7 +35,8 @@ const LoginForm = () => {
 
     // 2. Define a submit handler.
     async function onSubmit(values: LoginBodyType) {
-
+        if (isLoading) return
+        setIsLoading(true)
         try {
             const result = await authApiRequest.login(values)
 
@@ -45,25 +49,13 @@ const LoginForm = () => {
             router.push('/me')
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
-            const errors = error.payload.errors as {
-                field: string,
-                message: string
-            }[]
-
-            const status = error.status as number
-            if (status === 422) {
-                errors.forEach((error) => {
-                    form.setError(error.field as ('email' | 'password'), {
-                        type: 'server',
-                        message: error.message
-                    })
-                })
-            } else {
-                console.error('Error:', error);
-                toast.error('Lỗi', {
-                    description: error.payload?.message || 'Đã xảy ra lỗi không xác định',
-                });
-            }
+            handleErrorApi({
+                error,
+                setError: form.setError
+            })
+        }
+        finally {
+            setIsLoading(false)
         }
 
     }
