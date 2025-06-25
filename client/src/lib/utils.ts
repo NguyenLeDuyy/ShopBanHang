@@ -29,3 +29,10 @@ export const handleErrorApi = ({ error, setError, duration }: {
     });
   }
 }
+
+/**
+ * Xóa đi ký tự '/' ở đầu chuỗi path nếu có
+ */
+export const normalizePath = (path: string): string => {
+  return path.startsWith('/') ? path.slice(1) : path;
+}

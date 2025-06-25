@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import envConfig from '@/config'
+import { normalizePath } from '@/lib/utils'
 import { LoginResType } from '@/schemaValidations/auth.schema'
 
 type CustomOptions = Omit<RequestInit, 'method'> & {
@@ -108,10 +109,13 @@ const request = async <Response>(
             throw new HttpError(data)
         }
     }
-    if (['/auth/login', '/auth/register'].includes(url)) {
-        clientSessionToken.value = (payload as LoginResType).data.token
-    } else if ('/auth/logout'.includes(url)) {
-        clientSessionToken.value = ''
+    // Đảm bảo logic dưới đây chỉ chạy ở client side
+    if (typeof window !== 'undefined') {
+        if (['auth/login', 'auth/register'].some((path) => path === normalizePath(url))) {
+            clientSessionToken.value = (payload as LoginResType).data.token
+        } else if ('auth/logout' === normalizePath(url)) {
+            clientSessionToken.value = ''
+        }
     }
     return data
 }
