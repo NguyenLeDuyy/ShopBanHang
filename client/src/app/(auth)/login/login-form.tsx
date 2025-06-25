@@ -13,13 +13,13 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { LoginBody, LoginBodyType } from "@/schemaValidations/auth.schema"
-import envConfig from "@/config"
 import { toast } from "sonner"
-import { useAppContext } from "@/app/AppProvider"
+import authApiRequest from "@/apiRequests/authApiRequest"
+import { useRouter } from "next/navigation"
 
 const LoginForm = () => {
 
-    const { setSessionToken } = useAppContext();
+    const router = useRouter();
 
     // 1. Define your form.
     const form = useForm<LoginBodyType>({
@@ -34,50 +34,17 @@ const LoginForm = () => {
     async function onSubmit(values: LoginBodyType) {
 
         try {
-            const result = await fetch(`${envConfig.NEXT_PUBLIC_API_ENDPOINT}/auth/login`, {
-                body: JSON.stringify(values),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                method: 'POST'
-            }).then(async (res) => {
-                const payload = await res.json()
-                const data = {
-                    status: res.status,
-                    payload
-                }
-                if (!res.ok) {
-                    throw data
-                }
-                return data
-            })
+            const result = await authApiRequest.login(values)
 
             toast.success('Đăng nhập thành công', {
                 description: 'Vui lòng chờ trong giây lát',
             })
 
-            const resultFromNextServer = await fetch("/api/auth", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(result)
-            }).then(async (res) => {
-                const payload = await res.json()
-                const data = {
-                    status: res.status,
-                    payload
-                }
-                if (!res.ok) {
-                    throw data
-                }
-                return data
-            })
-            // console.log(resultFromNextServer)
-            setSessionToken(resultFromNextServer.payload.data.token)
+            await authApiRequest.auth({ sessionToken: result.payload.data.token })
+
+            router.push('/me')
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const errors = error.payload.errors as {
                 field: string,
                 message: string
@@ -92,13 +59,12 @@ const LoginForm = () => {
                     })
                 })
             } else {
-                toast.message('Lỗi', {
-                    description: error.payload.message,
-                })
+                console.error('Error:', error);
+                toast.error('Lỗi', {
+                    description: error.payload?.message || 'Đã xảy ra lỗi không xác định',
+                });
             }
         }
-
-
 
     }
 
