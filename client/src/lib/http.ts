@@ -8,6 +8,7 @@ type CustomOptions = Omit<RequestInit, 'method'> & {
 }
 
 const ENTITY_ERROR_STATUS = 422
+const AUTHENTICATION_ERROR_STATUS = 401
 
 type EntityErrorPayload = {
     message: string
@@ -105,7 +106,13 @@ const request = async <Response>(
                 status: 422,
                 payload: EntityErrorPayload
             })
-        } else {
+        } else if (res.status === AUTHENTICATION_ERROR_STATUS) {
+            if (typeof window !== 'undefined') {
+
+            }
+        }
+
+        else {
             throw new HttpError(data)
         }
     }
